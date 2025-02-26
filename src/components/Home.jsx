@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Splitter } from "antd";
 import { todoist } from "./config";
+import Inbox from "./Inbox";
 
 const Sidebar = () => {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
@@ -9,6 +10,9 @@ const Sidebar = () => {
   const [isFavoritesExpanded, setIsFavoritesExpanded] = useState(false);
   const [projects, setProjects] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const [hoveredProject, setHoveredProject] = useState(null);
+  const [hoveredFavorite, setHoveredFavorite] = useState(null);
+  const [inboxSize, setInboxSize] = useState("");
 
   useEffect(() => {
     todoist
@@ -49,7 +53,7 @@ const Sidebar = () => {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center">
                 <img
-                  src="https://avatars.githubusercontent.com/u/73424882?s=400&u=56dc45a1f9f667ae77bce3faac22a7ee73d68a94&v=4"
+                  src="https://dcff1xvirvpfp.cloudfront.net/a53d31e03afc4c03a351be551b929d63_big.jpg"
                   alt="Profile"
                   className="rounded-full w-6 h-6 mx-2"
                 />
@@ -152,7 +156,7 @@ const Sidebar = () => {
                     </svg>
                   ),
                   label: "Inbox",
-                  count: 101,
+                  count: inboxSize,
                 },
                 {
                   icon: (
@@ -253,7 +257,7 @@ const Sidebar = () => {
                   onClick={() => handleTabClick(label)}
                 >
                   {icon} <span className="ml-2">{label}</span>{" "}
-                  {count && (
+                  {count > 0 && (
                     <span className="ml-auto text-sm text-gray-500">
                       {count}
                     </span>
@@ -280,6 +284,8 @@ const Sidebar = () => {
                   {favorites.map((project) => (
                     <div
                       key={project}
+                      onMouseEnter={() => setHoveredFavorite(project.id)}
+                      onMouseLeave={() => setHoveredFavorite(null)}
                       className="flex items-center justify-between text-gray-700 cursor-pointer p-2 hover:bg-gray-200 rounded"
                     >
                       <div className={`flex items-center`}>
@@ -303,7 +309,16 @@ const Sidebar = () => {
                         </div>{" "}
                         {project.name}
                       </div>
-                      <Button type="link" size="small">
+                      <Button
+                        type="link"
+                        size="small"
+                        style={{
+                          visibility:
+                            project.id == hoveredFavorite
+                              ? "visible"
+                              : "hidden",
+                        }}
+                      >
                         <span className="text-[#bca4a4]">
                           <svg width="15" height="3" aria-hidden="true">
                             <path
@@ -343,6 +358,8 @@ const Sidebar = () => {
                   {projects.map((project) => (
                     <div
                       key={project.id}
+                      onMouseEnter={() => setHoveredProject(project.id)}
+                      onMouseLeave={() => setHoveredProject(null)}
                       className="flex items-center justify-between text-gray-700 cursor-pointer p-2 hover:bg-gray-200 rounded"
                     >
                       <div className="flex items-center">
@@ -366,7 +383,16 @@ const Sidebar = () => {
                         </div>{" "}
                         {project.name}
                       </div>
-                      <Button type="link" size="small">
+                      <Button
+                        type="link"
+                        size="small"
+                        style={{
+                          visibility:
+                            hoveredProject === project.id
+                              ? "visible"
+                              : "hidden",
+                        }}
+                      >
                         <span className="text-[#bca4a4]">
                           <svg width="15" height="3" aria-hidden="true">
                             <path
@@ -425,7 +451,7 @@ const Sidebar = () => {
           height: "100vh",
         }}
       >
-        {/* 2nd Section */}
+        <Inbox inboxSize={inboxSize} setInboxSize={setInboxSize} />
       </Splitter.Panel>
     </Splitter>
   );
