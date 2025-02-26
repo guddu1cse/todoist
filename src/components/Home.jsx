@@ -4,6 +4,7 @@ import { Button, Splitter } from "antd";
 import { todoist } from "./config";
 import Inbox from "./Inbox";
 import TaskModal from "./TaskModal";
+import AddProjectModal from "./AddProjectModal";
 
 const Sidebar = () => {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
@@ -15,6 +16,9 @@ const Sidebar = () => {
   const [hoveredFavorite, setHoveredFavorite] = useState(null);
   const [inboxSize, setInboxSize] = useState("");
   const [addForm, setAddForm] = useState(false);
+  const [checkedProject, setCheckedProject] = useState(null);
+  const [checkedFavorite, setCheckedFavorite] = useState(null);
+  const [showAddProject, setShowAddProject] = useState(false);
 
   useEffect(() => {
     todoist
@@ -30,10 +34,24 @@ const Sidebar = () => {
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+    setCheckedProject(null);
+    setCheckedFavorite(null);
   };
 
   const onCancel = () => {
     setAddForm(false);
+  };
+
+  const onFavoriteClick = (id) => {
+    setActiveTab(null);
+    setCheckedProject(null);
+    setCheckedFavorite(id);
+  };
+
+  const onProjectClick = (id) => {
+    setActiveTab(null);
+    setCheckedFavorite(null);
+    setCheckedProject(id);
   };
 
   return (
@@ -42,6 +60,9 @@ const Sidebar = () => {
         <div className="fixed top-0 bottom-0 w-[100vw] h-[100vh] flex justify-center items-center">
           <TaskModal visible={true} onCancel={onCancel} projects={projects} />
         </div>
+      )}
+      {showAddProject && (
+        <AddProjectModal setShowAddProject={setShowAddProject} />
       )}
       <div>
         <Splitter
@@ -284,13 +305,15 @@ const Sidebar = () => {
 
                 {/* Favorites */}
                 <div className="mt-4">
-                  <div
-                    className="text-gray-500 uppercase text-xs mb-2 cursor-pointer justify-between flex items-center"
-                    onClick={() => setIsFavoritesExpanded(!isFavoritesExpanded)}
-                  >
+                  <div className="flex items-center text-gray-500 justify-between uppercase text-xs cursor-pointer hover:bg-gray-200 rounded p-2">
                     <div>Favorites </div>
-                    <div>
-                      <span className="ml-2">
+                    <div
+                      onClick={() =>
+                        setIsFavoritesExpanded(!isFavoritesExpanded)
+                      }
+                      className="flex justify-center items-center hover:bg-gray-300 rounded p-2"
+                    >
+                      <span className="flex items-center justify-center ">
                         {isFavoritesExpanded ? (
                           <DownOutlined />
                         ) : (
@@ -306,10 +329,13 @@ const Sidebar = () => {
                           key={project}
                           onMouseEnter={() => setHoveredFavorite(project.id)}
                           onMouseLeave={() => setHoveredFavorite(null)}
-                          className="flex items-center justify-between text-gray-700 cursor-pointer p-2 hover:bg-gray-200 rounded"
+                          onClick={() => onFavoriteClick(project.id)}
+                          className={`flex items-center justify-between text-gray-700 cursor-pointer hover:bg-gray-200 rounded ${
+                            checkedFavorite === project.id ? "bg-[#ffefe5]" : ""
+                          }`}
                         >
                           <div className={`flex items-center`}>
-                            <div>
+                            <div className="flex justify-center items-center hover:bg-gray-300 rounded p-2">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="24"
@@ -339,7 +365,7 @@ const Sidebar = () => {
                                   : "hidden",
                             }}
                           >
-                            <span className="text-[#bca4a4]">
+                            <span className="text-[#bca4a4] hover:bg-gray-300 py-3 px-2 rounded">
                               <svg width="15" height="3" aria-hidden="true">
                                 <path
                                   fill="currentColor"
@@ -357,10 +383,7 @@ const Sidebar = () => {
 
                 {/* My Projects */}
                 <div className="mt-4">
-                  <div
-                    className="flex items-center text-gray-500 justify-between uppercase text-xs cursor-pointer"
-                    onClick={() => setIsProjectsOpen(!isProjectsOpen)}
-                  >
+                  <div className="flex items-center text-gray-500 justify-between uppercase text-xs cursor-pointer hover:bg-gray-200 rounded p-2">
                     <div>
                       My Projects{" "}
                       <span className="ml-2 text-xs bg-gray-200 px-2 rounded">
@@ -369,7 +392,30 @@ const Sidebar = () => {
                     </div>
                     <div>
                       <span className="">
-                        {isProjectsOpen ? <DownOutlined /> : <RightOutlined />}
+                        <div className="flex gap-3 ">
+                          <div
+                            className="hover:bg-gray-300 rounded p-2 flex justify-center items-center"
+                            onClick={() => setShowAddProject(true)}
+                          >
+                            <svg width="13" height="13">
+                              <path
+                                fill="currentColor"
+                                fill-rule="evenodd"
+                                d="M6 6V.5a.5.5 0 0 1 1 0V6h5.5a.5.5 0 1 1 0 1H7v5.5a.5.5 0 1 1-1 0V7H.5a.5.5 0 0 1 0-1H6z"
+                              ></path>
+                            </svg>
+                          </div>
+                          <div
+                            className="flex items-center justify-center hover:bg-gray-300 rounded p-2"
+                            onClick={() => setIsProjectsOpen(!isProjectsOpen)}
+                          >
+                            {isProjectsOpen ? (
+                              <DownOutlined />
+                            ) : (
+                              <RightOutlined />
+                            )}
+                          </div>
+                        </div>
                       </span>
                     </div>
                   </div>
@@ -380,7 +426,10 @@ const Sidebar = () => {
                           key={project.id}
                           onMouseEnter={() => setHoveredProject(project.id)}
                           onMouseLeave={() => setHoveredProject(null)}
-                          className="flex items-center justify-between text-gray-700 cursor-pointer p-2 hover:bg-gray-200 rounded"
+                          onClick={() => onProjectClick(project.id)}
+                          className={`flex items-center justify-between text-gray-700 cursor-pointer p-2 hover:bg-gray-200 rounded ${
+                            checkedProject === project.id ? "bg-[#ffefe5]" : ""
+                          }`}
                         >
                           <div className="flex items-center">
                             <div>
@@ -413,7 +462,7 @@ const Sidebar = () => {
                                   : "hidden",
                             }}
                           >
-                            <span className="text-[#bca4a4]">
+                            <span className="text-[#bca4a4] hover:bg-gray-300 py-3 px-2 rounded">
                               <svg width="15" height="3" aria-hidden="true">
                                 <path
                                   fill="currentColor"
@@ -471,7 +520,12 @@ const Sidebar = () => {
               height: "100vh",
             }}
           >
-            <Inbox inboxSize={inboxSize} setInboxSize={setInboxSize} />
+            {/* Inbox */}
+            <Inbox
+              inboxSize={inboxSize}
+              setInboxSize={setInboxSize}
+              setAddForm={setAddForm}
+            />
           </Splitter.Panel>
         </Splitter>
       </div>

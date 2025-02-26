@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { updateTask } from "../utils/axios";
 
-const Inbox = ({ InboxSize, setInboxSize }) => {
+const Inbox = ({ InboxSize, setInboxSize, setAddForm }) => {
   const [task, setTask] = useState([]);
   const [hoveredTask, setHoveredTask] = useState(null);
   const [listHovered, setListHovered] = useState(null);
@@ -229,6 +229,28 @@ const Inbox = ({ InboxSize, setInboxSize }) => {
             </div>
           </div>
         ))}
+        <div
+          onClick={() => setAddForm(true)}
+          className="flex items-center justify-center cursor-pointer p-2 text-gray-500 hover:text-[#DC4C3E] hover:bg-gray-200 rounded"
+        >
+          <div className="mr-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M12 23c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11Zm-.711-16.5a.75.75 0 1 1 1.5 0v4.789H17.5a.75.75 0 0 1 0 1.5h-4.711V17.5a.75.75 0 0 1-1.5 0V12.79H6.5a.75.75 0 1 1 0-1.5h4.789V6.5Z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>{" "}
+          Add Task
+        </div>
       </div>
     </div>
   );

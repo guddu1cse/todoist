@@ -34,6 +34,29 @@ const updateTask = async (id, argsUpdate) => {
     // }
 };
 
+export const addProject = async (obj, setShowAddProject) => {
+    try {
+        const response = await axios.post(
+            base + `/projects`,
+            obj,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Request-Id": uuidv4(),
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        console.log("Project Added:", response.data);
+        notifySuccess("Project Added Successfully");
+        setShowAddProject(false);
+    } catch (error) {
+        console.error("Error adding project:", error.response?.data || error);
+        notifyError(
+            `Error adding project: ${error.response?.data || error.message}`
+        );
+    }
+};
 
 
 export { updateTask };

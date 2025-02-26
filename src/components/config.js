@@ -14,6 +14,7 @@ export const notifySuccess = (msg) => {
     });
 }
 
+
 export const notifyError = (msg) => {
     toast.error(msg, {
         position: "top-center",
