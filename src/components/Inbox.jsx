@@ -6,6 +6,7 @@ import {
   MessageOutlined,
   MoreOutlined,
 } from "@ant-design/icons";
+import { updateTask } from "../utils/axios";
 
 const Inbox = ({ InboxSize, setInboxSize }) => {
   const [task, setTask] = useState([]);
@@ -16,7 +17,11 @@ const Inbox = ({ InboxSize, setInboxSize }) => {
     todoist
       .getTasks()
       .then((tasks) => {
-        setTask(tasks.results.map((task) => ({ ...task, name: task.content })));
+        setTask(
+          tasks.results
+            .map((task) => ({ ...task, name: task.content }))
+            .filter((task) => !task.isCompleted)
+        );
         console.log(
           tasks.results.map((task) => ({ ...task, name: task.content }))
         );
@@ -35,10 +40,7 @@ const Inbox = ({ InboxSize, setInboxSize }) => {
   const handleClick = (id) => {
     console.log(id);
     setTask((prevTask) => prevTask.filter((task) => task.id !== id));
-    todoist
-      .updateTask(id, { isCompleted: true })
-      .then((res) => console.log("success", res))
-      .catch((error) => console.log("error in updating task status", error));
+    updateTask(id, { isCompleted: true });
   };
 
   return (
