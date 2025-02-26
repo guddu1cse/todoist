@@ -1,6 +1,10 @@
 import React, { use } from "react";
 import { Modal, Input, Button, Dropdown, Menu } from "antd";
 import { useState, useEffect } from "react";
+import { todoist } from "./config";
+import { v4 as uuidv4 } from "uuid";
+import { notifyError, notifySuccess } from "./config";
+
 import {
   CalendarOutlined,
   FlagOutlined,
@@ -14,11 +18,12 @@ const priorityList = [
   { priority: 4, color: "#8c8c8c" },
 ];
 
-const TaskModal = ({ visible, onCancel, onAdd, projects }) => {
+const TaskModal = ({ visible, onCancel, projects }) => {
   const [salectedProject, setSelectedProject] = useState(null);
   const [priority, setPriority] = useState({ priority: 1, color: "#d1453b" });
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [btnDisabled, setBtnDisabled] = useState(false);
 
   useEffect(() => {
     console.log(salectedProject);
@@ -35,6 +40,61 @@ const TaskModal = ({ visible, onCancel, onAdd, projects }) => {
   useEffect(() => {
     console.log(priority);
   }, [priority]);
+
+  const onAdd = async () => {
+    console.log("adding new task");
+    setBtnDisabled(true);
+    const id = uuidv4();
+    const args = {
+      creatorId: "2671355",
+      createdAt: new Date().toISOString(),
+      assigneeId: null,
+      assignerId: null,
+      commentCount: 0,
+      isCompleted: false,
+      content: name,
+      description: description,
+      due: {
+        date: new Date().toISOString(),
+        isRecurring: false,
+        datetime: new Date().toISOString(),
+        string: "tomorrow at 12",
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      },
+      deadline: {
+        date: new Date().toISOString().split("T")[0],
+      },
+      duration: null,
+      id: uuidv4(),
+      labels: [],
+      order: 3,
+      priority: priority.priority,
+      projectId: salectedProject.id || 0,
+      sectionId: null,
+      parentId: null,
+      url: "https://todoist.com/showTask?id=" + id,
+    };
+
+    try {
+      const response = await todoist.addTask(args);
+      console.log("Task Created:", response.data);
+      onSuccess();
+      onCancel();
+    } catch (error) {
+      notifyError("Something went wrong");
+      console.error("Error creating task:", error.response?.data || error);
+      setBtnDisabled(false);
+    }
+  };
+
+  const onSuccess = () => {
+    notifySuccess("Task Added Successfully");
+    setName("");
+    setDescription("");
+    setPriority({ priority: 1, color: "#d1453b" });
+    setSelectedProject(null);
+    setBtnDisabled(false);
+  };
 
   const priorityMenu = (
     <Menu>
@@ -219,10 +279,13 @@ const TaskModal = ({ visible, onCancel, onAdd, projects }) => {
                 className={`${
                   salectedProject !== null ? "bg-[#c3392c]" : "bg-[#eda59e]"
                 } border-none text-white px-4 py-2 rounded-sm`}
-                onClick={onAdd}
-                disabled={salectedProject !== null}
+                onClick={() => onAdd()}
+                disabled={salectedProject === null || btnDisabled}
                 style={{
-                  cursor: salectedProject !== null ? "pointer" : "not-allowed",
+                  cursor:
+                    salectedProject !== null && !btnDisabled
+                      ? "pointer"
+                      : "not-allowed",
                 }}
               >
                 Add task

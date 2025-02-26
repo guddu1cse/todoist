@@ -35,18 +35,12 @@ const Sidebar = () => {
   const onCancel = () => {
     setAddForm(false);
   };
-  const onAdd = () => {};
 
   return (
     <div>
       {addForm && (
         <div className="fixed top-0 bottom-0 w-[100vw] h-[100vh] flex justify-center items-center">
-          <TaskModal
-            visible={true}
-            onCancel={onCancel}
-            onAdd={onAdd}
-            projects={projects}
-          />
+          <TaskModal visible={true} onCancel={onCancel} projects={projects} />
         </div>
       )}
       <div>
