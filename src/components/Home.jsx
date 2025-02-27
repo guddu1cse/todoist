@@ -6,6 +6,7 @@ import Inbox from "./Inbox";
 import TaskModal from "./TaskModal";
 import AddProjectModal from "./AddProjectModal";
 import ProjectDetails from "./ProjectDetails";
+import ProjectMenu from "./ProjectMenu";
 
 const Sidebar = () => {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
@@ -22,6 +23,8 @@ const Sidebar = () => {
   const [showAddProject, setShowAddProject] = useState(false);
   const [isInboxIteam, setIsInboxIteam] = useState(true);
   const [salectedProject, setSalectedProject] = useState(null);
+  const [showProjectMenu, setShowProjectMenu] = useState(false);
+  const [edit, setEdit] = useState(0);
 
   useEffect(() => {
     if (activeTab === "Inbox") setIsInboxIteam(true);
@@ -41,6 +44,7 @@ const Sidebar = () => {
     }
   }, [checkedFavorite, checkedProject]);
 
+  // no use
   useEffect(() => {
     console.log(salectedProject);
   }, [salectedProject]);
@@ -88,6 +92,9 @@ const Sidebar = () => {
       )}
       {showAddProject && (
         <AddProjectModal setShowAddProject={setShowAddProject} />
+      )}
+      {showProjectMenu && (
+        <ProjectMenu setShowProjectMenu={setShowProjectMenu} id={edit} />
       )}
       <div>
         <Splitter
@@ -351,7 +358,7 @@ const Sidebar = () => {
                     <div className="mt-2 space-y-2">
                       {favorites.map((project) => (
                         <div
-                          key={project}
+                          key={project.id + "favorite"}
                           onMouseEnter={() => setHoveredFavorite(project.id)}
                           onMouseLeave={() => setHoveredFavorite(null)}
                           onClick={() => {
@@ -391,6 +398,12 @@ const Sidebar = () => {
                                 project.id == hoveredFavorite
                                   ? "visible"
                                   : "hidden",
+                            }}
+                            // Edit Model
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEdit(project.id);
+                              setShowProjectMenu(true);
                             }}
                           >
                             <span className="text-[#bca4a4] hover:bg-gray-300 py-3 px-2 rounded">
@@ -491,6 +504,12 @@ const Sidebar = () => {
                                 hoveredProject === project.id
                                   ? "visible"
                                   : "hidden",
+                            }}
+                            // Edit Model
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEdit(project.id);
+                              setShowProjectMenu(true);
                             }}
                           >
                             <span className="text-[#bca4a4] hover:bg-gray-300 py-3 px-2 rounded">
