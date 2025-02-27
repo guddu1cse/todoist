@@ -9,7 +9,7 @@ import ProjectDetails from "./ProjectDetails";
 
 const Sidebar = () => {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState(null);
+  const [activeTab, setActiveTab] = useState("Inbox");
   const [isFavoritesExpanded, setIsFavoritesExpanded] = useState(false);
   const [projects, setProjects] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -559,6 +559,7 @@ const Sidebar = () => {
                 setAddForm={setAddForm}
               />
             )}
+            {/* Project Details Page */}
             {salectedProject != null && (
               <ProjectDetails {...salectedProject} setAddForm={setAddForm} />
             )}
