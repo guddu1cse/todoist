@@ -5,6 +5,7 @@ import { todoist } from "./config";
 import Inbox from "./Inbox";
 import TaskModal from "./TaskModal";
 import AddProjectModal from "./AddProjectModal";
+import ProjectDetails from "./ProjectDetails";
 
 const Sidebar = () => {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
@@ -19,6 +20,30 @@ const Sidebar = () => {
   const [checkedProject, setCheckedProject] = useState(null);
   const [checkedFavorite, setCheckedFavorite] = useState(null);
   const [showAddProject, setShowAddProject] = useState(false);
+  const [isInboxIteam, setIsInboxIteam] = useState(true);
+  const [salectedProject, setSalectedProject] = useState(null);
+
+  useEffect(() => {
+    if (activeTab === "Inbox") setIsInboxIteam(true);
+    else setIsInboxIteam(false);
+  }, [activeTab]);
+
+  useEffect(() => {
+    console.log(
+      "checked Favorite Project",
+      checkedFavorite,
+      +"checked Project",
+      checkedProject
+    );
+
+    if (checkedFavorite || checkedProject) {
+      setActiveTab(null);
+    }
+  }, [checkedFavorite, checkedProject]);
+
+  useEffect(() => {
+    console.log(salectedProject);
+  }, [salectedProject]);
 
   useEffect(() => {
     todoist
@@ -329,7 +354,10 @@ const Sidebar = () => {
                           key={project}
                           onMouseEnter={() => setHoveredFavorite(project.id)}
                           onMouseLeave={() => setHoveredFavorite(null)}
-                          onClick={() => onFavoriteClick(project.id)}
+                          onClick={() => {
+                            onFavoriteClick(project.id);
+                            setSalectedProject(project);
+                          }}
                           className={`flex items-center justify-between text-gray-700 cursor-pointer hover:bg-gray-200 rounded ${
                             checkedFavorite === project.id ? "bg-[#ffefe5]" : ""
                           }`}
@@ -426,7 +454,10 @@ const Sidebar = () => {
                           key={project.id}
                           onMouseEnter={() => setHoveredProject(project.id)}
                           onMouseLeave={() => setHoveredProject(null)}
-                          onClick={() => onProjectClick(project.id)}
+                          onClick={() => {
+                            onProjectClick(project.id);
+                            setSalectedProject(project);
+                          }}
                           className={`flex items-center justify-between text-gray-700 cursor-pointer p-2 hover:bg-gray-200 rounded ${
                             checkedProject === project.id ? "bg-[#ffefe5]" : ""
                           }`}
@@ -521,11 +552,16 @@ const Sidebar = () => {
             }}
           >
             {/* Inbox */}
-            <Inbox
-              inboxSize={inboxSize}
-              setInboxSize={setInboxSize}
-              setAddForm={setAddForm}
-            />
+            {isInboxIteam && (
+              <Inbox
+                inboxSize={inboxSize}
+                setInboxSize={setInboxSize}
+                setAddForm={setAddForm}
+              />
+            )}
+            {salectedProject != null && (
+              <ProjectDetails {...salectedProject} setAddForm={setAddForm} />
+            )}
           </Splitter.Panel>
         </Splitter>
       </div>

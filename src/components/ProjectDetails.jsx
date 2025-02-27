@@ -7,40 +7,36 @@ import {
   MoreOutlined,
 } from "@ant-design/icons";
 import { updateTask } from "../utils/axios";
-import { notifySuccess, notifyError } from "./config";
+import { notifyError } from "./config";
 
-const Inbox = ({ InboxSize, setInboxSize, setAddForm }) => {
+const ProjectDetails = ({ id, name, color, setAddForm }) => {
   const [task, setTask] = useState([]);
   const [hoveredTask, setHoveredTask] = useState(null);
   const [listHovered, setListHovered] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setTask([]);
+    setIsLoading(true);
     todoist
       .getTasks()
       .then((tasks) => {
         setTask(
           tasks.results
             .map((task) => ({ ...task, name: task.content }))
-            .filter((task) => !task.isCompleted)
+            .filter((task) => !task.isCompleted && task.projectId === id)
         );
         console.log(
           tasks.results.map((task) => ({ ...task, name: task.content }))
         );
-        notifySuccess("Task loaded Successfully");
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
         notifyError("Error loading tasks");
+        setIsLoading(false);
       });
-  }, []);
-
-  useEffect(() => {
-    if (task) {
-      setInboxSize(task.length);
-    } else {
-      setInboxSize("");
-    }
-  }, [task]);
+  }, [id]);
 
   const handleClick = (id) => {
     console.log(id);
@@ -52,7 +48,29 @@ const Inbox = ({ InboxSize, setInboxSize, setAddForm }) => {
     <div className="p-6 w-full bg-white min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-center">Inbox</h1>
+        <h1 className="text-2xl font-bold text-center">
+          <div className="flex items-center">
+            <div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+                className=""
+                style={{ color: color }}
+              >
+                <path
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493l.487-2.918ZM14.327 10H10.34l-.667 4h3.987l.667-4Z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            </div>{" "}
+            {name}
+          </div>
+        </h1>
         <div className="flex space-x-2 text-gray-500">
           <button className="flex items-center hover:bg-gray-100 p-2 rounded">
             <div className="flex">
@@ -104,6 +122,17 @@ const Inbox = ({ InboxSize, setInboxSize, setAddForm }) => {
 
       {/* List */}
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        {task.length === 0 && (
+          <div className="flex items-center justify-center py-4">
+            {isLoading ? (
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900">
+                {" "}
+              </div>
+            ) : (
+              <p className="text-gray-500">No tasks found</p>
+            )}
+          </div>
+        )}
         {task.map((item) => (
           <div
             key={item.id}
@@ -261,4 +290,4 @@ const Inbox = ({ InboxSize, setInboxSize, setAddForm }) => {
   );
 };
 
-export default Inbox;
+export default ProjectDetails;
