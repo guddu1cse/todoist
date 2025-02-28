@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Input, Select, Switch, Button, Radio } from "antd";
 import { v4 as uuidv4 } from "uuid";
-import { notifyError, notifySuccess } from "./config";
 import { addProject } from "../utils/axios";
 const { Option } = Select;
 const colors = [

@@ -2,7 +2,6 @@ import React, { use } from "react";
 import { Modal, Input, Button, Dropdown, Menu } from "antd";
 import { useState, useEffect } from "react";
 import { todoist } from "./config";
-import { v4 as uuidv4 } from "uuid";
 import { notifyError, notifySuccess } from "./config";
 import { updateTaskRequest } from "../utils/axios";
 

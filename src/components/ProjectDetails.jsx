@@ -1,11 +1,5 @@
 import React, { use, useEffect, useState } from "react";
-import { Checkbox, Input, Button } from "antd";
 import { todoist } from "./config";
-import {
-  SettingOutlined,
-  MessageOutlined,
-  MoreOutlined,
-} from "@ant-design/icons";
 import { updateTask } from "../utils/axios";
 import { notifyError } from "./config";
 import TaskEditModal from "./TaskEditModel";

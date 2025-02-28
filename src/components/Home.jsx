@@ -25,6 +25,24 @@ const Sidebar = () => {
   const [salectedProject, setSalectedProject] = useState(null);
   const [showProjectMenu, setShowProjectMenu] = useState(false);
   const [edit, setEdit] = useState(0);
+  const [tasks, setTasks] = useState([]);
+  const [taskCount, setTaskCount] = useState({});
+
+  useEffect(() => {
+    if (tasks.length > 0 && projects.length > 0) {
+      const obj = {};
+      projects.forEach((project) => {
+        obj[project.id] = 0;
+        tasks.forEach((task) => {
+          if (task.projectId === project.id) {
+            obj[project.id] += 1;
+          }
+        });
+      });
+      setTaskCount({ ...obj });
+      console.log("taskCount", obj);
+    }
+  }, [tasks, projects]);
 
   useEffect(() => {
     if (activeTab === "Inbox") setIsInboxIteam(true);
@@ -57,6 +75,15 @@ const Sidebar = () => {
         setFavorites(() => projects.filter((project) => project.isFavorite));
         setProjects(projects);
         console.log(projects);
+      })
+      .catch((error) => console.log(error));
+
+    todoist
+      .getTasks()
+      .then((tasks) => tasks.results)
+      .then((tasks) => {
+        setTasks(tasks);
+        console.log(tasks);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -394,10 +421,8 @@ const Sidebar = () => {
                             type="link"
                             size="small"
                             style={{
-                              visibility:
-                                project.id == hoveredFavorite
-                                  ? "visible"
-                                  : "hidden",
+                              display:
+                                project.id == hoveredFavorite ? "flex" : "none",
                             }}
                             // Edit Model
                             onClick={(e) => {
@@ -416,6 +441,17 @@ const Sidebar = () => {
                               </svg>
                             </span>
                           </Button>
+                          <p
+                            style={{
+                              display:
+                                project.id !== hoveredFavorite
+                                  ? "flex"
+                                  : "none",
+                            }}
+                            className="text-[#bca4a4] hover:bg-gray-300 rounded mr-5"
+                          >
+                            {taskCount[project.id] ? taskCount[project.id] : 0}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -500,10 +536,8 @@ const Sidebar = () => {
                             type="link"
                             size="small"
                             style={{
-                              visibility:
-                                hoveredProject === project.id
-                                  ? "visible"
-                                  : "hidden",
+                              display:
+                                hoveredProject === project.id ? "flex" : "none",
                             }}
                             // Edit Model
                             onClick={(e) => {
@@ -522,6 +556,15 @@ const Sidebar = () => {
                               </svg>
                             </span>
                           </Button>
+                          <p
+                            style={{
+                              display:
+                                project.id !== hoveredProject ? "flex" : "none",
+                            }}
+                            className="text-[#bca4a4] hover:bg-gray-300 rounded mr-5"
+                          >
+                            {taskCount[project.id] ? taskCount[project.id] : 0}
+                          </p>
                         </div>
                       ))}
                     </div>
