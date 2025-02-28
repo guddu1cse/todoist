@@ -7,6 +7,8 @@ import TaskModal from "./TaskModal";
 import AddProjectModal from "./AddProjectModal";
 import ProjectDetails from "./ProjectDetails";
 import ProjectMenu from "./ProjectMenu";
+import Today from "./Today";
+import Completed from "./Completed";
 
 const Sidebar = () => {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
@@ -114,7 +116,12 @@ const Sidebar = () => {
     <div>
       {addForm && (
         <div className="fixed top-0 bottom-0 w-[100vw] h-[100vh] flex justify-center items-center">
-          <TaskModal visible={true} onCancel={onCancel} projects={projects} />
+          <TaskModal
+            visible={true}
+            onCancel={onCancel}
+            projects={projects}
+            projectId={checkedProject || checkedFavorite}
+          />
         </div>
       )}
       {showAddProject && (
@@ -448,7 +455,7 @@ const Sidebar = () => {
                                   ? "flex"
                                   : "none",
                             }}
-                            className="text-[#bca4a4] hover:bg-gray-300 rounded mr-5"
+                            className="text-gray-500 hover:bg-gray-300 rounded mr-5"
                           >
                             {taskCount[project.id] ? taskCount[project.id] : 0}
                           </p>
@@ -464,7 +471,7 @@ const Sidebar = () => {
                     <div>
                       My Projects{" "}
                       <span className="ml-2 text-xs bg-gray-200 px-2 rounded">
-                        USED: 14/5
+                        USED: {projects.length}/5
                       </span>
                     </div>
                     <div>
@@ -561,7 +568,7 @@ const Sidebar = () => {
                               display:
                                 project.id !== hoveredProject ? "flex" : "none",
                             }}
-                            className="text-[#bca4a4] hover:bg-gray-300 rounded mr-5"
+                            className="text-gray-500 hover:bg-gray-300 rounded mr-3"
                           >
                             {taskCount[project.id] ? taskCount[project.id] : 0}
                           </p>
@@ -614,12 +621,18 @@ const Sidebar = () => {
             }}
           >
             {/* Inbox */}
-            {isInboxIteam && (
+            {activeTab === "Inbox" && (
               <Inbox
                 inboxSize={inboxSize}
                 setInboxSize={setInboxSize}
                 setAddForm={setAddForm}
               />
+            )}
+            {activeTab === "Today" && (
+              <Today InboxSize={inboxSize} setAddForm={setAddForm} />
+            )}
+            {activeTab === "Completed" && (
+              <Completed InboxSize={inboxSize} setAddForm={setAddForm} />
             )}
             {/* Project Details Page */}
             {salectedProject != null && (

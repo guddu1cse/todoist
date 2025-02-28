@@ -18,12 +18,17 @@ const priorityList = [
   { priority: 4, color: "#8c8c8c" },
 ];
 
-const TaskModal = ({ visible, onCancel, projects }) => {
+const TaskModal = ({ visible, onCancel, projects, projectId }) => {
   const [salectedProject, setSelectedProject] = useState(null);
   const [priority, setPriority] = useState({ priority: 1, color: "#d1453b" });
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [btnDisabled, setBtnDisabled] = useState(false);
+
+  useEffect(() => {
+    setSelectedProject(projects.find((project) => project.id === projectId));
+    console.log("projectId", projectId);
+  }, [projects]);
 
   useEffect(() => {
     console.log(salectedProject);
