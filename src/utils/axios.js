@@ -184,5 +184,30 @@ export const removeProject = async (id) => {
     }
 }
 
+export const updateTaskRequest = async (id, argsUpdate) => {
+
+    try {
+        const response = await axios.post(
+            base + `/tasks/${id}`,
+            argsUpdate,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Request-Id": uuidv4(),
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        console.log("task Updated:", response.data);
+        notifySuccess("Task Updated Successfully");
+        return response.data;
+    } catch (error) {
+        console.error("Error while updating task:", error.response?.data || error);
+        notifyError(
+            `Error while updating task: ${error.response?.data || error.message}`
+        );
+    }
+}
+
 
 export { updateTask };
