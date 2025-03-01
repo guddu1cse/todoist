@@ -11,11 +11,6 @@ const ProjectMenu = ({ setShowProjectMenu, id }) => {
     getProject(id).then((res) => setProject(res));
   }, [id]);
 
-  //   no use
-  useEffect(() => {
-    if (project) setIsFavorite(project.is_favorite);
-  }, [project]);
-
   const updateProject = async () => {
     await addToFavorites(id, { ...project, is_favorite: !isFavorite });
     setShowProjectMenu(false);

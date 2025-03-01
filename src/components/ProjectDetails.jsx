@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { todoist } from "./config";
 import { updateTask } from "../utils/axios";
 import { notifyError } from "./config";
@@ -23,27 +23,20 @@ const ProjectDetails = ({ id, name, color, setAddForm }) => {
             .map((task) => ({ ...task, name: task.content }))
             .filter((task) => !task.isCompleted && task.projectId === id)
         );
-        console.log(
-          tasks.results.map((task) => ({ ...task, name: task.content }))
-        );
         setIsLoading(false);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         notifyError("Error loading tasks");
         setIsLoading(false);
       });
   }, [id]);
 
   const handleClick = (id) => {
-    console.log(id);
     setTask((prevTask) => prevTask.filter((task) => task.id !== id));
     updateTask(id, { isCompleted: true });
   };
 
-  oncancel = () => {
-    setEditModel(false);
-  };
+  oncancel = () => setEditModel(false);
 
   return (
     <div>

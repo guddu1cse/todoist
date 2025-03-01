@@ -3,20 +3,13 @@ import { Modal, Input, Button, Dropdown, Menu } from "antd";
 import { useState, useEffect } from "react";
 import { todoist } from "./config";
 import { notifyError, notifySuccess } from "./config";
-import { updateTaskRequest } from "../utils/axios";
-
+import { priorityList } from "../constant/constant";
 import {
   CalendarOutlined,
   FlagOutlined,
   BellOutlined,
   MoreOutlined,
 } from "@ant-design/icons";
-const priorityList = [
-  { priority: 1, color: "#d1453b" },
-  { priority: 2, color: "#f7dc6f" },
-  { priority: 3, color: "#00b8a9" },
-  { priority: 4, color: "#8c8c8c" },
-];
 
 const TaskEditModal = ({
   visible,
@@ -37,12 +30,10 @@ const TaskEditModal = ({
   const [pid, setPid] = useState(0);
 
   useEffect(() => {
-    console.log("taskid at taskEditModel", id);
     setName("loading");
     const getProjects = async () => {
       try {
         const ps = await todoist.getProjects();
-        console.log("Projects at taskEditModel:", ps);
         setProjects(ps.results);
       } catch (error) {
         notifyError(`Error fetching projects: ${error.message}`);
@@ -60,7 +51,7 @@ const TaskEditModal = ({
         setPid(task.projectId);
       })
       .catch((error) => {
-        console.log(error);
+        notifyError(`Error fetching tasks: ${error.message}`);
       });
   }, []);
 
@@ -68,30 +59,6 @@ const TaskEditModal = ({
     if (projects.length > 0) {
       setSelectedProject(projects.find((p) => p.id === pid));
     }
-  }, [pid]);
-
-  // no use
-  useEffect(() => {
-    console.log("salcetd project at edit model", selectedProject);
-  }, [selectedProject]);
-
-  // no use
-  useEffect(() => {
-    console.log(name);
-  }, [name]);
-
-  // no use
-  useEffect(() => {
-    console.log(description);
-  }, [description]);
-
-  // no use
-  useEffect(() => {
-    console.log(priority);
-  }, [priority]);
-
-  useEffect(() => {
-    console.log("pid at taskEditModel", pid);
   }, [pid]);
 
   const onAdd = async () => {
@@ -109,7 +76,6 @@ const TaskEditModal = ({
       await todoist.addTask(args);
       onSuccess();
     } catch (error) {
-      console.error("Error updating task:", error.response?.data || error);
       notifyError(
         `Error updating task: ${error.response?.data || error.message}`
       );

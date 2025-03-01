@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { todoist } from "./config";
 import { v4 as uuidv4 } from "uuid";
 import { notifyError, notifySuccess } from "./config";
+import { priorityList } from "../constant/constant";
 
 import {
   CalendarOutlined,
@@ -11,12 +12,6 @@ import {
   BellOutlined,
   MoreOutlined,
 } from "@ant-design/icons";
-const priorityList = [
-  { priority: 1, color: "#d1453b" },
-  { priority: 2, color: "#f7dc6f" },
-  { priority: 3, color: "#00b8a9" },
-  { priority: 4, color: "#8c8c8c" },
-];
 
 const TaskModal = ({ visible, onCancel, projects, projectId }) => {
   const [salectedProject, setSelectedProject] = useState(null);
@@ -27,27 +22,9 @@ const TaskModal = ({ visible, onCancel, projects, projectId }) => {
 
   useEffect(() => {
     setSelectedProject(projects.find((project) => project.id === projectId));
-    console.log("projectId", projectId);
   }, [projects]);
 
-  useEffect(() => {
-    console.log(salectedProject);
-  }, [salectedProject]);
-
-  useEffect(() => {
-    console.log(name);
-  }, [name]);
-
-  useEffect(() => {
-    console.log(description);
-  }, [description]);
-
-  useEffect(() => {
-    console.log(priority);
-  }, [priority]);
-
   const onAdd = async () => {
-    console.log("adding new task");
     setBtnDisabled(true);
     const id = uuidv4();
     const args = {
@@ -82,12 +59,10 @@ const TaskModal = ({ visible, onCancel, projects, projectId }) => {
 
     try {
       const response = await todoist.addTask(args);
-      console.log("Task Created:", response.data);
       onSuccess();
       onCancel();
     } catch (error) {
       notifyError("Something went wrong");
-      console.error("Error creating task:", error.response?.data || error);
       setBtnDisabled(false);
     }
   };

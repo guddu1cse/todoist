@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Splitter } from "antd";
-import { todoist } from "./config";
+import { notifyError, todoist } from "./config";
 import Inbox from "./Inbox";
 import TaskModal from "./TaskModal";
 import AddProjectModal from "./AddProjectModal";
@@ -42,7 +42,6 @@ const Sidebar = () => {
         });
       });
       setTaskCount({ ...obj });
-      console.log("taskCount", obj);
     }
   }, [tasks, projects]);
 
@@ -52,22 +51,10 @@ const Sidebar = () => {
   }, [activeTab]);
 
   useEffect(() => {
-    console.log(
-      "checked Favorite Project",
-      checkedFavorite,
-      +"checked Project",
-      checkedProject
-    );
-
     if (checkedFavorite || checkedProject) {
       setActiveTab(null);
     }
   }, [checkedFavorite, checkedProject]);
-
-  // no use
-  useEffect(() => {
-    console.log(salectedProject);
-  }, [salectedProject]);
 
   useEffect(() => {
     todoist
@@ -76,18 +63,14 @@ const Sidebar = () => {
       .then((projects) => {
         setFavorites(() => projects.filter((project) => project.isFavorite));
         setProjects(projects);
-        console.log(projects);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => notifyError(error.message));
 
     todoist
       .getTasks()
       .then((tasks) => tasks.results)
-      .then((tasks) => {
-        setTasks(tasks);
-        console.log(tasks);
-      })
-      .catch((error) => console.log(error));
+      .then((tasks) => setTasks(tasks))
+      .catch((error) => notifyError(error.message));
   }, []);
 
   const handleTabClick = (tab) => {
@@ -96,9 +79,7 @@ const Sidebar = () => {
     setCheckedFavorite(null);
   };
 
-  const onCancel = () => {
-    setAddForm(false);
-  };
+  const onCancel = () => setAddForm(false);
 
   const onFavoriteClick = (id) => {
     setActiveTab(null);

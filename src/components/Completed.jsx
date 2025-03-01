@@ -1,10 +1,10 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { todoist } from "./config";
 import TaskEditModal from "./TaskEditModel";
 import { updateTask } from "../utils/axios";
 import { notifySuccess, notifyError } from "./config";
 
-const Completed = ({ InboxSize, setAddForm }) => {
+const Completed = ({ setAddForm }) => {
   const [task, setTask] = useState([]);
   const [hoveredTask, setHoveredTask] = useState(null);
   const [listHovered, setListHovered] = useState(null);
@@ -20,13 +20,9 @@ const Completed = ({ InboxSize, setAddForm }) => {
             .map((task) => ({ ...task, name: task.content }))
             .filter((task) => task.isCompleted)
         );
-        console.log(
-          tasks.results.map((task) => ({ ...task, name: task.content }))
-        );
         notifySuccess("Task loaded Successfully");
       })
       .catch((error) => {
-        console.error(error);
         notifyError("Error loading tasks");
       });
   }, []);
@@ -36,7 +32,6 @@ const Completed = ({ InboxSize, setAddForm }) => {
   };
 
   const handleClick = (id) => {
-    console.log(id);
     setTask((prevTask) => prevTask.filter((task) => task.id !== id));
     updateTask(id, { isCompleted: true });
   };

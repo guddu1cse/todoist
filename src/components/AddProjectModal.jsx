@@ -3,20 +3,7 @@ import { Modal, Input, Select, Switch, Button, Radio } from "antd";
 import { v4 as uuidv4 } from "uuid";
 import { addProject } from "../utils/axios";
 const { Option } = Select;
-const colors = [
-  { name: "Red", color: "red" },
-  { name: "Purple", color: "purple" },
-  { name: "Sky Blue", color: "skyblue" },
-  { name: "Teal", color: "teal" },
-  { name: "Orange", color: "orange" },
-  { name: "Lime", color: "lime" },
-  { name: "Green", color: "green" },
-  { name: "Cyan", color: "cyan" },
-  { name: "Magenta", color: "magenta" },
-  { name: "Yellow", color: "yellow" },
-  { name: "Pink", color: "pink" },
-  { name: "Blue", color: "blue" },
-];
+import { colors } from "../constant/constant";
 
 const AddProjectModal = ({ setShowAddProject }) => {
   const [projectName, setProjectName] = useState("");

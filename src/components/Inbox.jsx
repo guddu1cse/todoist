@@ -20,13 +20,9 @@ const Inbox = ({ InboxSize, setInboxSize, setAddForm }) => {
             .map((task) => ({ ...task, name: task.content }))
             .filter((task) => !task.isCompleted)
         );
-        console.log(
-          tasks.results.map((task) => ({ ...task, name: task.content }))
-        );
         notifySuccess("Task loaded Successfully");
       })
       .catch((error) => {
-        console.error(error);
         notifyError("Error loading tasks");
       });
   }, []);
@@ -44,7 +40,6 @@ const Inbox = ({ InboxSize, setInboxSize, setAddForm }) => {
   };
 
   const handleClick = (id) => {
-    console.log(id);
     setTask((prevTask) => prevTask.filter((task) => task.id !== id));
     updateTask(id, { isCompleted: true });
   };

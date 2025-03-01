@@ -4,7 +4,7 @@ import TaskEditModal from "./TaskEditModel";
 import { updateTask } from "../utils/axios";
 import { notifySuccess, notifyError } from "./config";
 
-const Today = ({ InboxSize, setAddForm }) => {
+const Today = ({ setAddForm }) => {
   const [task, setTask] = useState([]);
   const [hoveredTask, setHoveredTask] = useState(null);
   const [listHovered, setListHovered] = useState(null);
@@ -24,13 +24,9 @@ const Today = ({ InboxSize, setAddForm }) => {
                 task.createdAt === new Date().toISOString().split("T")[0]
             )
         );
-        console.log(
-          tasks.results.map((task) => ({ ...task, name: task.content }))
-        );
         notifySuccess("Task loaded Successfully");
       })
       .catch((error) => {
-        console.error(error);
         notifyError("Error loading tasks");
       });
   }, []);
@@ -40,7 +36,6 @@ const Today = ({ InboxSize, setAddForm }) => {
   };
 
   const handleClick = (id) => {
-    console.log(id);
     setTask((prevTask) => prevTask.filter((task) => task.id !== id));
     updateTask(id, { isCompleted: true });
   };
