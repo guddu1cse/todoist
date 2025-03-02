@@ -10,6 +10,7 @@ import {
   BellOutlined,
   MoreOutlined,
 } from "@ant-design/icons";
+import { Hashtag } from "../assets/Icons";
 
 const TaskEditModal = ({
   visible,
@@ -116,21 +117,8 @@ const TaskEditModal = ({
         <button>
           <div className="flex items-center">
             <span style={{ color: "gray" }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-                style={{ color: "gray" }}
-              >
-                <path
-                  fill="currentColor"
-                  fillRule="evenodd"
-                  d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493l.487-2.918ZM14.327 10H10.34l-.667 4h3.987l.667-4Z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
+              {/* Hash tag icon*/}
+              <Hashtag project={selectedProject} />
             </span>{" "}
             <div>Inbox</div>
           </div>
@@ -142,21 +130,8 @@ const TaskEditModal = ({
             <button onClick={() => setPid(project.id)}>
               <div className="flex items-center">
                 <span style={{ color: project.color }}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    style={{ color: project.color }}
-                  >
-                    <path
-                      fill="currentColor"
-                      fillRule="evenodd"
-                      d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493l.487-2.918ZM14.327 10H10.34l-.667 4h3.987l.667-4Z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
+                  {/* Hash tag icon*/}
+                  <Hashtag project={project} />
                 </span>{" "}
                 <div>{project.name}</div>
               </div>
@@ -178,22 +153,8 @@ const TaskEditModal = ({
           {selectedProject && (
             <div className="flex items-center gap-1">
               <span style={{ color: selectedProject?.color ?? "gray" }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  className=""
-                  style={{ color: selectedProject?.color ?? "gray" }}
-                >
-                  <path
-                    fill="currentColor"
-                    fillRule="evenodd"
-                    d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493l.487-2.918ZM14.327 10H10.34l-.667 4h3.987l.667-4Z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>{" "}
+                {/* Hash tag icon*/}
+                <Hashtag project={selectedProject} />{" "}
               </span>
               <div>{selectedProject.name}</div>
             </div>
@@ -248,22 +209,8 @@ const TaskEditModal = ({
                 {selectedProject ? (
                   <div className="flex items-center gap-1">
                     <span style={{ color: selectedProject.color }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        className=""
-                        style={{ color: selectedProject?.color ?? "gray" }}
-                      >
-                        <path
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493l.487-2.918ZM14.327 10H10.34l-.667 4h3.987l.667-4Z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
+                      {/* Hash tag icon*/}
+                      <Hashtag project={selectedProject} />
                     </span>
                     <div>{selectedProject.name}</div>
                   </div>

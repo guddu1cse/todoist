@@ -12,6 +12,7 @@ import {
   BellOutlined,
   MoreOutlined,
 } from "@ant-design/icons";
+import { Hashtag } from "../assets/Icons";
 
 const TaskModal = ({ visible, onCancel, projects, projectId }) => {
   const [salectedProject, setSelectedProject] = useState(null);
@@ -101,21 +102,7 @@ const TaskModal = ({ visible, onCancel, projects, projectId }) => {
         <button onClick={() => setSelectedProject("inbox")}>
           <div className="flex items-center">
             <span style={{ color: "gray" }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-                style={{ color: "gray" }}
-              >
-                <path
-                  fill="currentColor"
-                  fillRule="evenodd"
-                  d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493l.487-2.918ZM14.327 10H10.34l-.667 4h3.987l.667-4Z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
+              <Hashtag project={{ color: "gray" }} />
             </span>{" "}
             <div>{"put it in inbox"}</div>
           </div>
@@ -126,21 +113,8 @@ const TaskModal = ({ visible, onCancel, projects, projectId }) => {
           <button onClick={() => setSelectedProject(project)}>
             <div className="flex items-center">
               <span style={{ color: project.color }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  style={{ color: project.color }}
-                >
-                  <path
-                    fill="currentColor"
-                    fillRule="evenodd"
-                    d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493l.487-2.918ZM14.327 10H10.34l-.667 4h3.987l.667-4Z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
+                {/* Hashtag icon */}
+                <Hashtag project={project} />
               </span>{" "}
               <div>{project.name}</div>
             </div>
@@ -162,22 +136,8 @@ const TaskModal = ({ visible, onCancel, projects, projectId }) => {
           {salectedProject && (
             <div className="flex items-center gap-1">
               <span style={{ color: salectedProject?.color ?? "gray" }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  className=""
-                  style={{ color: salectedProject?.color ?? "gray" }}
-                >
-                  <path
-                    fill="currentColor"
-                    fillRule="evenodd"
-                    d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493l.487-2.918ZM14.327 10H10.34l-.667 4h3.987l.667-4Z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>{" "}
+                {/* Hashtag icon */}
+                <Hashtag project={salectedProject} />{" "}
               </span>
               <div>{salectedProject.name}</div>
             </div>
@@ -230,22 +190,8 @@ const TaskModal = ({ visible, onCancel, projects, projectId }) => {
                 {salectedProject ? (
                   <div className="flex items-center gap-1">
                     <span style={{ color: salectedProject.color }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        className=""
-                        style={{ color: salectedProject?.color ?? "gray" }}
-                      >
-                        <path
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493l.487-2.918ZM14.327 10H10.34l-.667 4h3.987l.667-4Z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
+                      {/* Hashtag icon */}
+                      <Hashtag project={salectedProject} />
                     </span>
                     <div>{salectedProject.name}</div>
                   </div>
