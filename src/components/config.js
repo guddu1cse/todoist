@@ -1,7 +1,7 @@
 import { TodoistApi } from "@doist/todoist-api-typescript";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export const todoist = new TodoistApi("96573b3e1df5f6d633f74eb5ed001878f64bc7d8");
+export const todoist = new TodoistApi(import.meta.env.VITE_TOKEN);
 const toastOptions = {
     position: "top-center",
     autoClose: 500,
