@@ -2,8 +2,8 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { notifyError, notifySuccess } from "../components/config";
 
-const token = "96573b3e1df5f6d633f74eb5ed001878f64bc7d8";
-const base = `https://api.todoist.com/rest/v2`;
+const token = import.meta.env.VITE_TOKEN;
+const base = import.meta.env.VITE_BASE_URL;
 const headers = {
     "Content-Type": "application/json",
     "X-Request-Id": uuidv4(),
