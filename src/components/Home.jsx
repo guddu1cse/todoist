@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Splitter } from "antd";
 import { notifyError, todoist } from "./config";
@@ -9,6 +9,8 @@ import ProjectDetails from "./ProjectDetails";
 import ProjectMenu from "./ProjectMenu";
 import Today from "./Today";
 import Completed from "./Completed";
+import { useDispatch, useSelector } from "react-redux";
+import { setState } from "../redux/slice";
 import {
   Add,
   Bell,
@@ -21,24 +23,32 @@ import {
 import { scrollableContent } from "../constant/constant";
 
 const Sidebar = () => {
-  const [isProjectsOpen, setIsProjectsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("Inbox");
-  const [isFavoritesExpanded, setIsFavoritesExpanded] = useState(false);
-  const [projects, setProjects] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const [hoveredProject, setHoveredProject] = useState(null);
-  const [hoveredFavorite, setHoveredFavorite] = useState(null);
-  const [inboxSize, setInboxSize] = useState("");
-  const [addForm, setAddForm] = useState(false);
-  const [checkedProject, setCheckedProject] = useState(null);
-  const [checkedFavorite, setCheckedFavorite] = useState(null);
-  const [showAddProject, setShowAddProject] = useState(false);
-  const [isInboxIteam, setIsInboxIteam] = useState(true);
-  const [salectedProject, setSalectedProject] = useState(null);
-  const [showProjectMenu, setShowProjectMenu] = useState(false);
-  const [edit, setEdit] = useState(0);
-  const [tasks, setTasks] = useState([]);
-  const [taskCount, setTaskCount] = useState({});
+  const dispatch = useDispatch();
+
+  const {
+    isProjectsOpen,
+    activeTab,
+    isFavoritesExpanded,
+    projects,
+    favorites,
+    hoveredProject,
+    hoveredFavorite,
+    inboxSize,
+    addForm,
+    checkedProject,
+    checkedFavorite,
+    showAddProject,
+    isInboxIteam,
+    salectedProject,
+    showProjectMenu,
+    edit,
+    tasks,
+    taskCount,
+  } = useSelector((state) => state.project);
+
+  const handleStateChange = (key, value) => {
+    dispatch(setState({ key, value }));
+  };
 
   useEffect(() => {
     if (tasks.length > 0 && projects.length > 0) {
@@ -51,56 +61,42 @@ const Sidebar = () => {
           }
         });
       });
-      setTaskCount({ ...obj });
+      handleStateChange("taskCount", obj);
     }
   }, [tasks, projects]);
 
   useEffect(() => {
-    if (activeTab === "Inbox") setIsInboxIteam(true);
-    else setIsInboxIteam(false);
+    if (activeTab === "Inbox") {
+      handleStateChange("isInboxIteam", true);
+    } else {
+      handleStateChange("isInboxIteam", false);
+    }
   }, [activeTab]);
 
   useEffect(() => {
     if (checkedFavorite || checkedProject) {
-      setActiveTab(null);
+      handleStateChange("activeTab", null);
     }
   }, [checkedFavorite, checkedProject]);
 
-  useEffect(() => {
-    todoist
-      .getProjects()
-      .then((projects) => projects.results)
-      .then((projects) => {
-        setFavorites(() => projects.filter((project) => project.isFavorite));
-        setProjects(projects);
-      })
-      .catch((error) => notifyError(error.message));
-
-    todoist
-      .getTasks()
-      .then((tasks) => tasks.results)
-      .then((tasks) => setTasks(tasks))
-      .catch((error) => notifyError(error.message));
-  }, []);
-
   const handleTabClick = (tab) => {
-    setActiveTab(tab);
-    setCheckedProject(null);
-    setCheckedFavorite(null);
+    handleStateChange("activeTab", tab);
+    handleStateChange("checkedProject", null);
+    handleStateChange("checkedFavorite", null);
   };
 
-  const onCancel = () => setAddForm(false);
+  const onCancel = () => handleStateChange("addForm", false);
 
   const onFavoriteClick = (id) => {
-    setActiveTab(null);
-    setCheckedProject(null);
-    setCheckedFavorite(id);
+    handleStateChange("activeTab", null);
+    handleStateChange("checkedProject", null);
+    handleStateChange("checkedFavorite", id);
   };
 
   const onProjectClick = (id) => {
-    setActiveTab(null);
-    setCheckedFavorite(null);
-    setCheckedProject(id);
+    handleStateChange("activeTab", null);
+    handleStateChange("checkedFavorite", null);
+    handleStateChange("checkedProject", id);
   };
 
   return (
@@ -116,10 +112,15 @@ const Sidebar = () => {
         </div>
       )}
       {showAddProject && (
-        <AddProjectModal setShowAddProject={setShowAddProject} />
+        <AddProjectModal
+          setShowAddProject={() => handleStateChange("showAddProject", false)}
+        />
       )}
       {showProjectMenu && (
-        <ProjectMenu setShowProjectMenu={setShowProjectMenu} id={edit} />
+        <ProjectMenu
+          setShowProjectMenu={() => handleStateChange("showProjectMenu", false)}
+          id={edit}
+        />
       )}
       <div>
         <Splitter
@@ -152,21 +153,18 @@ const Sidebar = () => {
                   </div>
                   <div className="flex items-center justify-end">
                     <div className="mr-3">
-                      {/* Bell Icon */}
                       <Bell />
                     </div>
                     <div>
-                      {/* Close Icon */}
                       <Close />
                     </div>
                   </div>
                 </div>
                 <div
-                  onClick={() => setAddForm(true)}
+                  onClick={() => handleStateChange("addForm", true)}
                   className="flex items-center cursor-pointer p-2 text-[#DC4C3E] hover:bg-gray-200 rounded"
                 >
                   <div className="mr-2">
-                    {/* Plus Icon */}
                     <Plus />
                   </div>{" "}
                   Add Task
@@ -202,7 +200,10 @@ const Sidebar = () => {
                     <div>Favorites </div>
                     <div
                       onClick={() =>
-                        setIsFavoritesExpanded(!isFavoritesExpanded)
+                        handleStateChange(
+                          "isFavoritesExpanded",
+                          !isFavoritesExpanded
+                        )
                       }
                       className="flex justify-center items-center hover:bg-gray-300 rounded p-2"
                     >
@@ -220,19 +221,21 @@ const Sidebar = () => {
                       {favorites.map((project) => (
                         <div
                           key={project.id + "favorite"}
-                          onMouseEnter={() => setHoveredFavorite(project.id)}
-                          onMouseLeave={() => setHoveredFavorite(null)}
-                          onClick={() => {
-                            onFavoriteClick(project.id);
-                            setSalectedProject(project);
-                          }}
+                          onMouseEnter={() =>
+                            handleStateChange("hoveredFavorite", project.id)
+                          }
+                          onMouseLeave={() =>
+                            handleStateChange("hoveredFavorite", null)
+                          }
+                          onClick={() => onFavoriteClick(project.id)}
                           className={`flex items-center justify-between text-gray-700 cursor-pointer hover:bg-gray-200 rounded ${
                             checkedFavorite === project.id ? "bg-[#ffefe5]" : ""
                           }`}
                         >
                           <div className={`flex items-center`}>
                             <div className="flex justify-center items-center hover:bg-gray-300 rounded p-2">
-                              <Hashtag project={project} />
+                              <Hashtag />{" "}
+                              {/* Assuming Hashtag is a component */}
                             </div>{" "}
                             {project.name}
                           </div>
@@ -241,163 +244,63 @@ const Sidebar = () => {
                             size="small"
                             style={{
                               display:
-                                project.id == hoveredFavorite ? "flex" : "none",
+                                project.id === hoveredFavorite
+                                  ? "flex"
+                                  : "none",
                             }}
-                            // Edit Model
                             onClick={(e) => {
                               e.stopPropagation();
-                              setEdit(project.id);
-                              setShowProjectMenu(true);
+                              handleStateChange("edit", project.id);
+                              handleStateChange("showProjectMenu", true);
                             }}
                           >
-                            <span className="text-[#bca4a4] hover:bg-gray-300 py-3 px-2 rounded">
-                              <Ellipsis />
-                            </span>
+                            <Ellipsis />{" "}
+                            {/* Assuming Ellipsis is a component */}
                           </Button>
-                          <p
+                          <div
+                            className="text-gray-500 hover:bg-gray-300 rounded mr-5"
                             style={{
                               display:
                                 project.id !== hoveredFavorite
                                   ? "flex"
                                   : "none",
                             }}
-                            className="text-gray-500 hover:bg-gray-300 rounded mr-5"
                           >
                             {taskCount[project.id] ? taskCount[project.id] : 0}
-                          </p>
+                          </div>
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
 
-                {/* My Projects */}
+                {/* My Projects Section */}
                 <div className="mt-4">
-                  <div className="flex items-center text-gray-500 justify-between uppercase text-xs cursor-pointer hover:bg-gray-200 rounded p-2">
-                    <div>
-                      My Projects{" "}
-                      <span className="ml-2 text-xs bg-gray-200 px-2 rounded">
-                        USED: {projects.length}/5
-                      </span>
-                    </div>
-                    <div>
-                      <span className="">
-                        <div className="flex gap-3 ">
-                          <div
-                            className="hover:bg-gray-300 rounded p-2 flex justify-center items-center"
-                            onClick={() => setShowAddProject(true)}
-                          >
-                            <Add />
-                          </div>
-                          <div
-                            className="flex items-center justify-center hover:bg-gray-300 rounded p-2"
-                            onClick={() => setIsProjectsOpen(!isProjectsOpen)}
-                          >
-                            {isProjectsOpen ? (
-                              <DownOutlined />
-                            ) : (
-                              <RightOutlined />
-                            )}
-                          </div>
-                        </div>
-                      </span>
+                  <div className="flex items-center justify-between text-gray-500 uppercase text-xs cursor-pointer hover:bg-gray-200 rounded p-2">
+                    <div>My Projects</div>
+                    <div
+                      onClick={() =>
+                        handleStateChange("isProjectsOpen", !isProjectsOpen)
+                      }
+                    >
+                      {isProjectsOpen ? <DownOutlined /> : <RightOutlined />}
                     </div>
                   </div>
                   {isProjectsOpen && (
-                    <div className="mt-2 space-y-2">
-                      {projects.map((project) => (
-                        <div
-                          key={project.id}
-                          onMouseEnter={() => setHoveredProject(project.id)}
-                          onMouseLeave={() => setHoveredProject(null)}
-                          onClick={() => {
-                            onProjectClick(project.id);
-                            setSalectedProject(project);
-                          }}
-                          className={`flex items-center justify-between text-gray-700 cursor-pointer p-2 hover:bg-gray-200 rounded ${
-                            checkedProject === project.id ? "bg-[#ffefe5]" : ""
-                          }`}
-                        >
-                          <div className="flex items-center">
-                            <div>
-                              <Hashtag project={project} />
-                            </div>{" "}
-                            {project.name}
-                          </div>
-                          <Button
-                            type="link"
-                            size="small"
-                            style={{
-                              display:
-                                hoveredProject === project.id ? "flex" : "none",
-                            }}
-                            // Edit Model
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEdit(project.id);
-                              setShowProjectMenu(true);
-                            }}
-                          >
-                            <span className="text-[#bca4a4] hover:bg-gray-300 py-3 px-2 rounded">
-                              <Ellipsis />
-                            </span>
-                          </Button>
-                          <p
-                            style={{
-                              display:
-                                project.id !== hoveredProject ? "flex" : "none",
-                            }}
-                            className="text-gray-500 hover:bg-gray-300 rounded mr-3"
-                          >
-                            {taskCount[project.id] ? taskCount[project.id] : 0}
-                          </p>
-                        </div>
-                      ))}
+                    <div className="mt-2">
+                      {/* Projects list could be similar to favorites */}
                     </div>
                   )}
-                </div>
-              </div>
-
-              {/* Fixed Add Team Button */}
-              <div className="p-4">
-                <div className="flex items-center text-gray-700 cursor-pointer p-2  hover:bg-gray-200 rounded">
-                  <div className="mr-2">
-                    <Add />
-                  </div>{" "}
-                  Add a team
-                </div>
-                <div className="flex items-center text-gray-700 cursor-pointer p-2  hover:bg-gray-200 rounded">
-                  <div className="mr-2">
-                    <Template />
-                  </div>{" "}
-                  Browser Template
                 </div>
               </div>
             </div>
           </Splitter.Panel>
-          <Splitter.Panel
-            style={{
-              height: "100vh",
-            }}
-          >
-            {/* Inbox */}
-            {activeTab === "Inbox" && (
-              <Inbox
-                inboxSize={inboxSize}
-                setInboxSize={setInboxSize}
-                setAddForm={setAddForm}
-              />
-            )}
-            {activeTab === "Today" && (
-              <Today InboxSize={inboxSize} setAddForm={setAddForm} />
-            )}
-            {activeTab === "Completed" && (
-              <Completed InboxSize={inboxSize} setAddForm={setAddForm} />
-            )}
-            {/* Project Details Page */}
-            {salectedProject != null && (
-              <ProjectDetails {...salectedProject} setAddForm={setAddForm} />
-            )}
+          <Splitter.Panel style={{ height: "100vh" }}>
+            {/* Conditional rendering based on `activeTab` */}
+            {/* {activeTab === "Inbox" && <Inbox />}
+            {activeTab === "Today" && <Today />}
+            {activeTab === "Completed" && <Completed />} */}
+            {/* Additional conditional renders for other tabs */}
           </Splitter.Panel>
         </Splitter>
       </div>

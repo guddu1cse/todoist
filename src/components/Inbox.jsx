@@ -3,6 +3,8 @@ import { todoist } from "./config";
 import TaskEditModal from "./TaskEditModel";
 import { updateTask } from "../utils/axios";
 import { notifySuccess, notifyError } from "./config";
+import { setState } from "../redux/slice";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Adjust,
   Calculator,
@@ -14,6 +16,33 @@ import {
 } from "../assets/Icons";
 
 const Inbox = ({ InboxSize, setInboxSize, setAddForm }) => {
+  const dispatch = useDispatch();
+
+  const {
+    isProjectsOpen,
+    activeTab,
+    isFavoritesExpanded,
+    projects,
+    favorites,
+    hoveredProject,
+    hoveredFavorite,
+    inboxSize,
+    addForm,
+    checkedProject,
+    checkedFavorite,
+    showAddProject,
+    isInboxIteam,
+    salectedProject,
+    showProjectMenu,
+    edit,
+    tasks,
+    taskCount,
+  } = useSelector((state) => state.project);
+
+  const handleStateChange = (key, value) => {
+    dispatch(setState({ key, value }));
+  };
+
   const [task, setTask] = useState([]);
   const [hoveredTask, setHoveredTask] = useState(null);
   const [listHovered, setListHovered] = useState(null);

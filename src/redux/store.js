@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import projectReducer from "./ProjectSlice"; // Import the reducer correctly
+import { projectReducer, taskReducer } from "./slice";
 
 export const store = configureStore({
   reducer: {
-    project: projectReducer, // Use projectReducer directly
+    project: projectReducer,
+    task: taskReducer,
   },
 });

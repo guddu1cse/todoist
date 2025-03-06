@@ -1,14 +1,16 @@
 import { Modal, Menu } from "antd";
 import { StarOutlined, DeleteOutlined } from "@ant-design/icons";
 import { use, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { getProject, addToFavorites, removeProject } from "../utils/axios";
 
 const ProjectMenu = ({ setShowProjectMenu, id }) => {
+  const projects = useSelector((state) => state.project.projects);
   const [project, setProject] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    getProject(id).then((res) => setProject(res));
+    setProject(projects.find((p) => p.id === id));
   }, [id]);
 
   const updateProject = async () => {
